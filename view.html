@@ -1,0 +1,60 @@
+<html>
+<style>
+</style>
+
+<script>
+  async function getJoke() {
+
+    var res = await fetch("https://icanhazdadjoke.com", {
+      method: "get",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    var data = await res.json();
+    return data.joke;
+  }
+</script>
+
+<table id="tbl" class="table table-hover table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Joke</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="joke in model">
+      <td>{{joke}}</td>
+      <td><input type="button" value="Delete joke" onclick="deleteRow(this)" /></td>
+    </tr>
+  </tbody>
+</table>
+<input type="submit" class="button" value="Get a new joke" onclick="addField('tbl');" />
+
+<script>
+
+  async function addField(table) {
+
+    var tableRef = document.getElementById(table);
+    var newRow = tableRef.insertRow(-1);
+
+    var newCell = newRow.insertCell(0);
+    newCell.innerHTML = await getJoke();
+
+    newCell = newRow.insertCell(1);
+    newElem = document.createElement('input');
+    newElem.setAttribute("type", "button");
+    newElem.setAttribute("value", "Delete joke");
+    newElem.setAttribute("onclick", 'deleteRow(this)')
+    newCell.appendChild(newElem);
+  }
+
+  window.deleteRow = function deleteRow(o) {
+    var p = o.parentNode.parentNode;
+    p.parentNode.removeChild(p);
+  }
+</script>
+
+</html>
